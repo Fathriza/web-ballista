@@ -1,7 +1,50 @@
+/* Definisikan variabel CSS di :root */
+:root {
+  --border: 240, 240, 240; /* Contoh nilai untuk border */
+  --radius: 8px; /* Atur nilai sesuai kebutuhan */
+  --background: 255, 255, 255; /* Contoh nilai untuk background */
+  --foreground: 0, 0, 0; /* Contoh nilai untuk teks */
+}
+
+/* Tailwind base styles */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-body {
-  min-height: 100vh;
+@layer components {
+  .border-border {
+    border-color: hsl(var(--border));
+    border-style: solid;
+    border-width: 0px; /* Ubah sesuai kebutuhan */
+  }
+
+  .rounded-custom {
+    @apply rounded-lg; /* Atau kelas rounded lainnya seperti rounded-md, rounded-sm */
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #dfdfdf;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #888;
 }

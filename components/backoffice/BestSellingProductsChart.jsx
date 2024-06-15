@@ -4,6 +4,7 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Pie } from "react-chartjs-2";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
+
 export default function BestSellingProductsChart() {
   const data = {
     labels: ["Jerseys", "Ticket", "Keychain", "Shawl"],
@@ -27,12 +28,27 @@ export default function BestSellingProductsChart() {
       },
     ],
   };
+
+  const options = {
+    plugins: {
+      legend: {
+        labels: {
+          color: window.matchMedia("(prefers-color-scheme: dark)").matches
+            ? "white"
+            : "black", // Adjust label color based on theme
+        },
+      },
+    },
+  };
+
   return (
-    <div className="bg-slate-700 p-8 rounded-lg">
-      <h2 className="text-xl font-bold mb-4">Best Selling Charts</h2>
+    <div className="dark:bg-slate-700 bg-slate-50 p-8 rounded-lg shadow-xl">
+      <h2 className="text-xl font-bold mb-4 text-slate-800 dark:text-slate-50">
+        Best Selling Charts
+      </h2>
       {/* Chart */}
       <div className="p-10">
-        <Pie data={data} className="w-14 h-14" />
+        <Pie data={data} options={options} className="w-14 h-14" />
       </div>
     </div>
   );
