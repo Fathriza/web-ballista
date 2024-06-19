@@ -46,11 +46,6 @@ export default function Sidebar({ showSidebar, setShowSidebar }) {
       icon: Truck,
       href: "/dashboard/orders",
     },
-    {
-      title: "Settings",
-      icon: Settings,
-      href: "/dashboard/settings",
-    },
   ];
   const catalogLinks = [
     {

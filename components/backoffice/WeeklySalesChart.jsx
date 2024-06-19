@@ -67,7 +67,7 @@ export default function WeeklySalesChart() {
           {
             label: "Sales",
             data: labels.map(() =>
-              faker.datatype.number({ min: -1000, max: 1000 })
+              faker.datatype.number({ min: 0, max: 1000 })
             ),
             borderColor: "rgb(255, 99, 132)",
             backgroundColor: "rgba(255, 99, 132, 0.5)",
@@ -84,7 +84,7 @@ export default function WeeklySalesChart() {
           {
             label: "Orders",
             data: labels.map(() =>
-              faker.datatype.number({ min: -1000, max: 1000 })
+              faker.datatype.number({ min: 0, max: 1000 })
             ),
             borderColor: "rgb(0, 137, 132)",
             backgroundColor: "rgba(0, 137, 132, 0.5)",

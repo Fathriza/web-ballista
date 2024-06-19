@@ -1,10 +1,10 @@
 import React from "react";
-export default function UpdateCategories() {
+export default function UpdateProduct () {
   return (
     <div>
       {/* Header */}
       {/* Table */}
-      <h2>Categories</h2>
+      <h2>Update Product</h2>
     </div>
   );
 }
