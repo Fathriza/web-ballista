@@ -11,7 +11,7 @@ export default function SmallCards() {
       icon: ShoppingCart,
     },
     {
-      title: "Orders Pending",
+      title: "Orders Failed",
       number: 12,
       iconBg: "bg-blue-600",
       icon: Loader2,

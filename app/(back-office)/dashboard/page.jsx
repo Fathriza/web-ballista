@@ -3,6 +3,7 @@ import Heading from "@/components/backoffice/Heading";
 import LargeCards from "@/components/backoffice/LargeCards";
 import SmallCards from "@/components/backoffice/SmallCards";
 import DashboardCharts from "@/components/backoffice/DashboardCharts";
+import RecomAI from "@/components/backoffice/RecomAI";
 import CustomDataTable from "../../../components/backoffice/CustomDataTable";
 export default function page() {
   return (
@@ -14,8 +15,8 @@ export default function page() {
       <SmallCards />
       {/* Charts*/}
       <DashboardCharts />
-      {/* Recent Orders Table*/}
-      <CustomDataTable />
+      {/* Recom AI */}
+      <RecomAI />
     </div>
   );
 }

@@ -31,7 +31,7 @@ export default function WeeklySalesChart() {
       },
       title: {
         display: true,
-        text: "Chart.js Line Chart",
+        text: "Line Chart",
       },
     },
   };
@@ -50,7 +50,7 @@ export default function WeeklySalesChart() {
       {
         label: "Sales",
         data: labels.map(() =>
-          faker.datatype.number({ min: -1000, max: 1000 })
+          faker.datatype.number({ min: 0, max: 1000 })
         ),
         borderColor: "rgb(255, 99, 132)",
         backgroundColor: "rgba(255, 99, 132, 0.5)",
@@ -102,7 +102,7 @@ export default function WeeklySalesChart() {
       <div className="p-4">
         {/* Tabs */}
 
-        <div className="text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700">
+        <div className="text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-slate-50 dark:border-white-50">
           <ul className="flex flex-wrap -mb-px">
             {tabs.map((tab, i) => {
               return (
@@ -112,7 +112,7 @@ export default function WeeklySalesChart() {
                     className={
                       chartToDisplay == tab.type
                         ? "inline-block p-4 text-blue-600 border-b-2 border-blue-600 rounded-t-lg active dark:text-blue-500 dark:border-blue-500"
-                        : "inline-block p-4 border-b-2 border-transparent rounded-t-lg text-slate-800 hover:text-gray-700 hover:border-gray-100 dark:hover:text-gray-300"
+                        : "inline-block p-4 border-b-2 border-transparent rounded-t-lg text-slate-50 hover:text-gray-700 hover:border-gray-100 dark:hover:text-gray-300"
                     }
                   >
                     {tab.title}

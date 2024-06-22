@@ -27,7 +27,7 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "app/layout.js",
-    "app/(front-end)/page.js",
+    "app/page.js",
     "tailwind.config.js"
   ],
   "exclude": ["node_modules"]
