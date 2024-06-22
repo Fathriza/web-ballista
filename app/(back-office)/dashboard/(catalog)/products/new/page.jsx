@@ -16,19 +16,19 @@ export default function NewProduct() {
   const categories = [
     {
       id: 1,
-      title: "Category 1",
+      title: "Jersey",
     },
     {
       id: 2,
-      title: "Category 2",
+      title: "Ticket",
     },
     {
       id: 3,
-      title: "Category 3",
+      title: "Key Chain",
     },
     {
       id: 4,
-      title: "Category 4",
+      title: "Shawl",
     },
   ];
   const [loading, setLoading] = useState(false);
