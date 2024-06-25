@@ -1,163 +1,158 @@
 "use client";
-import data from "../../data.json";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 export default function CustomDataTable() {
-  const arr = [1, 2, 3, 4, 5];
   const PAGE_SIZE = 10;
+  const [data, setData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    fetchData();
+  }, [currentPage]); // Fetch data when currentPage changes
+
+  const fetchData = async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch(`http://localhost:3002/orders-data`);
+      if (!response.ok) {
+        throw new Error("Failed to fetch data");
+      }
+      const result = await response.json();
+
+      // Sort data by order_time in descending order (latest first)
+      result.sort((a, b) => new Date(b.order_time) - new Date(a.order_time));
+
+      // Format order_date using Date object
+      const formattedResult = result.map((item) => ({
+        ...item,
+        order_date: formatDate(item.order_time),
+      }));
+
+      setData(formattedResult);
+      const totalItems = formattedResult.length;
+      setTotalPages(Math.ceil(totalItems / PAGE_SIZE));
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Function to format date from ISO 8601 to readable format
+  const formatDate = (isoDate) => {
+    const date = new Date(isoDate);
+    const formattedDate = `${date.getFullYear()}-${padZero(
+      date.getMonth() + 1
+    )}-${padZero(date.getDate())}`;
+    return formattedDate;
+  };
+
+  const padZero = (num) => {
+    return num.toString().padStart(2, "0");
+  };
+
   const startIndex = (currentPage - 1) * PAGE_SIZE;
-  const endIndex = startIndex + PAGE_SIZE;
-  const currentDisplayedData = data.slice(startIndex, endIndex);
-  const totalPages = Math.ceil(data.length / PAGE_SIZE);
-  // console.log(data);
+  const currentDisplayedData = data.slice(startIndex, startIndex + PAGE_SIZE);
   const itemStartIndex = startIndex + 1;
   const itemEndIndex = Math.min(startIndex + PAGE_SIZE, data.length);
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
   return (
     <div className="mt-8">
-      <h2 className="text-xl font-bold mb-4 dark:text-slate-50 text-slate-800 px-4">
-        Recent Order
-      </h2>
-      {/* Table */}
-      <div className="p-8">
-        <div className="relative overflow-x-auto shadow-md sm:rounded-lg p-8">
-          <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-            <thead className="text-xs text-gray-700 uppercase bg-slate-600 dark:bg-gray-700 dark:text-gray-400">
+      <h2 className="text-xl font-bold mb-4 ">Recent Orders</h2>
+      <div className="overflow-x-auto">
+        <table className="min-w-full bg-white dark:bg-gray-800">
+          <thead className="bg-gray-200 dark:bg-gray-700 ">
+            <tr clas>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Order ID
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                User Name
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Product Name
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Quantity
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Status
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Order Date
+              </th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+            {isLoading ? (
               <tr>
-                <th scope="col" className="p-4">
-                  <div className="flex items-center">
-                    <input
-                      id="checkbox-all-search"
-                      type="checkbox"
-                      className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                    />
-                    <label for="checkbox-all-search" className="sr-only">
-                      checkbox
-                    </label>
-                  </div>
-                </th>
-                <th scope="col" className="px-6 py-3 text-slate-50">
-                  Id
-                </th>
-                <th scope="col" className="px-6 py-3 text-slate-50">
-                  First Name
-                </th>
-                <th scope="col" className="px-6 py-3 text-slate-50">
-                  Last Name
-                </th>
-                <th scope="col" className="px-6 py-3 text-slate-50">
-                  Email
-                </th>
-                <th scope="col" className="px-6 py-3 text-slate-50">
-                  Gender
-                </th>
-                <th scope="col" className="px-6 py-3 text-slate-50">
-                  Action
-                </th>
+                <td colSpan="6" className="px-6 py-4 text-center">
+                  Loading...
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              {currentDisplayedData.map((item, i) => {
-                return (
-                  <tr
-                    key={i}
-                    className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
-                  >
-                    <td className="w-4 p-4">
-                      <div className="flex items-center">
-                        <input
-                          id="checkbox-table-search-3"
-                          type="checkbox"
-                          className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                        />
-                        <label
-                          for="checkbox-table-search-3"
-                          className="sr-only"
-                        >
-                          checkbox
-                        </label>
-                      </div>
-                    </td>
-                    <th
-                      scope="row"
-                      className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                    >
-                      {item.id}
-                    </th>
-                    <th
-                      scope="row"
-                      className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                    >
-                      {item.first_name}
-                    </th>
-                    <td className="px-6 py-4">{item.last_name}</td>
-                    <td className="px-6 py-4">{item.email}</td>
-                    <td className="px-6 py-4">{item.gender}</td>
-                    <td className="px-6 py-4">
-                      <button className="font-medium text-blue-600 dark:text-blue-500 hover:underline">
-                        Edit
-                      </button>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-          <nav
-            className="flex items-center flex-column flex-wrap md:flex-row justify-between pt-4"
-            aria-label="Table navigation"
+            ) : (
+              currentDisplayedData.map((item) => (
+                <tr key={item.order_id}>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    {item.order_id}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    {item.username}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    {item.product_name}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    {item.quantity}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">{item.status}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    {formatDate(item.order_time)}
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
+      <div className="mt-4 flex justify-between items-center">
+        <p className="text-sm text-gray-500 dark:text-gray-400">
+          Showing{" "}
+          <span className="font-medium">
+            {itemStartIndex}-{itemEndIndex}
+          </span>{" "}
+          of <span className="font-medium">{data.length}</span> results
+        </p>
+        <nav className="space-x-1" aria-label="Pagination">
+          <button
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1 || isLoading}
+            className={`px-3 py-1 text-xs rounded-md ${
+              currentPage === 1
+                ? "bg-gray-200 text-gray-500 cursor-default"
+                : "bg-white text-gray-700 hover:bg-gray-100"
+            } dark:bg-gray-700 dark:text-gray-400 dark:hover:bg-gray-600`}
           >
-            <span className="text-sm font-normal text-gray-500 dark:text-gray-400 mb-4 md:mb-0 block w-full md:inline md:w-auto">
-              Showing{" "}
-              <span className="font-semibold text-gray-50 dark:text-white">
-                {itemStartIndex}-{itemEndIndex}
-              </span>{" "}
-              of{" "}
-              <span className="font-semibold text-gray-50 dark:text-white">
-                {data.length}
-              </span>
-            </span>
-            <ul className="inline-flex -space-x-px rtl:space-x-reverse text-sm h-14">
-              <li>
-                <button
-                  onClick={() => setCurrentPage(currentPage - 1)}
-                  disabled={currentPage == 1}
-                  className="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                >
-                  Previous
-                </button>
-              </li>
-              {Array.from({ length: totalPages }, (_, index) => {
-                return (
-                  <li key={index}>
-                    <button
-                      onClick={() => setCurrentPage(index + 1)}
-                      disabled={currentPage == index + 1}
-                      className={
-                        "flex items-center justify-center px-3 h-8 leading-tight text-gray-500 border border-gray-300 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 " +
-                        (currentPage === index + 1
-                          ? ""
-                          : "bg-white dark:bg-gray-800")
-                      }
-                    >
-                      {index + 1}
-                    </button>
-                  </li>
-                );
-              })}
-
-              <li>
-                <button
-                  onClick={() => setCurrentPage(currentPage + 1)}
-                  disabled={currentPage == totalPages}
-                  className="flex items-center justify-center px-3 h-8 leading-tight text-grey-50 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                >
-                  Next
-                </button>
-              </li>
-            </ul>
-          </nav>
-        </div>
+            Previous
+          </button>
+          <button
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages || isLoading}
+            className={`px-3 py-1 text-xs rounded-md ${
+              currentPage === totalPages
+                ? "bg-gray-200 text-gray-500 cursor-default"
+                : "bg-white text-gray-700 hover:bg-gray-100"
+            } dark:bg-gray-700 dark:text-gray-400 dark:hover:bg-gray-600`}
+          >
+            Next
+          </button>
+        </nav>
       </div>
     </div>
   );

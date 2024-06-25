@@ -8,27 +8,44 @@ export default function RecomAI() {
     const savedResult = localStorage.getItem("aiResult");
     return savedResult ? savedResult : "Loading...";
   });
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchAiResult = async () => {
+      setLoading(true);
       try {
         const response = await fetch("http://localhost:3002/askAI");
         const data = await response.json();
         setAiResult(data.msg);
-        localStorage.setItem("aiResult", data.msg); 
+        localStorage.setItem("aiResult", data.msg);
       } catch (error) {
         console.error("Error fetching AI result:", error);
         setAiResult("Failed to load AI result.");
+      } finally {
+        setLoading(false);
       }
     };
 
-    
     if (aiResult === "Loading...") {
       fetchAiResult();
     }
-  }, []);
+  }, [aiResult]);
 
- 
+  const handleButtonClick = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch("http://localhost:3002/askAI");
+      const data = await response.json();
+      setAiResult(data.msg);
+      localStorage.setItem("aiResult", data.msg);
+    } catch (error) {
+      console.error("Error fetching AI result:", error);
+      setAiResult("Failed to load AI result.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const override = css`
     display: block;
     margin: 0 auto;
@@ -44,7 +61,7 @@ export default function RecomAI() {
         <h3 className="text-lg font-semibold mb-2 dark:text-slate-100 text-slate-900">
           Here's Your Recommendation
         </h3>
-        {aiResult === "Loading..." ? (
+        {loading ? (
           <div className="flex justify-center items-center">
             <BarLoader
               color={"#3498db"}
@@ -56,6 +73,12 @@ export default function RecomAI() {
         ) : (
           <p className="text-slate-600 dark:text-slate-300">{aiResult}</p>
         )}
+        <button
+          onClick={handleButtonClick}
+          className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75"
+        >
+          Get New Recommendation
+        </button>
       </div>
     </div>
   );

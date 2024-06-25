@@ -32,11 +32,6 @@ export default function Sidebar({ showSidebar, setShowSidebar }) {
   const pathname = usePathname();
   const sidebarLinks = [
     {
-      title: "Markets",
-      icon: Warehouse,
-      href: "/dashboard/markets",
-    },
-    {
       title: "Orders",
       icon: Truck,
       href: "/dashboard/orders",

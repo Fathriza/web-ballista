@@ -56,7 +56,7 @@ export default function NewProduct() {
       >
         <div className="grid gap-4 sm:grid-cols-2 sm:gap-6 rounded-lg">
           <Textinput
-            label="Product Title"
+            label="Product Name"
             name="title"
             register={register}
             errors={errors}
@@ -69,20 +69,7 @@ export default function NewProduct() {
             errors={errors}
             className="w-full"
           />
-          <Textinput
-            label="Product SKU"
-            name="sku"
-            register={register}
-            errors={errors}
-            className="w-full"
-          />
-          <Textinput
-            label="Product Barcode"
-            name="barcode"
-            register={register}
-            errors={errors}
-            className="w-full"
-          />
+
           <Textinput
             label="Product Price"
             name="productPrice"
@@ -91,14 +78,7 @@ export default function NewProduct() {
             errors={errors}
             className="w-full"
           />
-          <Textinput
-            label="Product Sale Price"
-            name="salePrice"
-            type="number"
-            register={register}
-            errors={errors}
-            className="w-full"
-          />
+
           <Selectinput
             label="Select Category"
             name="categoryId"
