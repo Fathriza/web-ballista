@@ -25,6 +25,7 @@ ChartJS.register(
 export default function WeeklySalesChart() {
   const [salesData, setSalesData] = useState([]);
   const [ordersData, setOrdersData] = useState([]);
+  const [kpiData, setKpiData] = useState([]);
   const [labels, setLabels] = useState([]);
 
   useEffect(() => {
@@ -41,17 +42,16 @@ export default function WeeklySalesChart() {
       );
       const ordersData = await ordersResponse.json();
 
-      // Debugging: Check the structure of the fetched data
-      console.log("Sales Data:", salesData);
-      console.log("Orders Data:", ordersData);
+      const kpiResponse = await fetch("http://localhost:3002/kpi-ai");
+      const kpiData = await kpiResponse.json();
 
-      // Balik urutan labels saja (tidak perlu lagi balik salesData dan ordersData)
       const labels = salesData.map((item) => item.month);
 
       setLabels(labels);
 
       setSalesData(salesData.map((item) => item.total_sales));
       setOrdersData(ordersData.map((item) => item.total_orders));
+      setKpiData(kpiData.map((item) => item.value)); // Set KPI data
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -65,7 +65,7 @@ export default function WeeklySalesChart() {
       },
       title: {
         display: true,
-        text: "Weekly Sales and Orders Chart",
+        text: "Monthly Sales, Orders, and KPI Chart",
       },
     },
   };
@@ -85,13 +85,19 @@ export default function WeeklySalesChart() {
         borderColor: "rgb(0, 137, 132)",
         backgroundColor: "rgba(0, 137, 132, 0.5)",
       },
+      {
+        label: "KPI AI",
+        data: kpiData,
+        borderColor: "rgb(54, 162, 235)",
+        backgroundColor: "rgba(54, 162, 235, 0.5)",
+      },
     ],
   };
 
   return (
     <div className="dark:bg-slate-700 bg-slate-50 p-8 rounded-lg shadow-xl">
       <h2 className="text-xl font-bold mb-4 text-slate-800 dark:text-slate-50">
-        Monthly Sales and Orders Chart
+        Monthly Sales, Orders, and KPI Chart
       </h2>
       <div className="p-4">
         <Line options={options} data={data} />

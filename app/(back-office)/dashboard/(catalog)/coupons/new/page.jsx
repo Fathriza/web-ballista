@@ -9,24 +9,43 @@ import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { generateCouponCode } from "@/lib/generateCouponCode";
 import ImageInput from "@/components/Forminputs/ImageInput";
-import { makePostRequest } from "@/lib/apiRequest";
 
 export default function NewCoupon() {
   const [loading, setLoading] = useState(false);
-  const [couponCode, setCouponCode] = useState();
   const {
     register,
-    reset,
-    watch,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm();
-  async function onSubmit(data) {
-    const couponCode = generateCouponCode(data.title, data.expiryDate);
-    data.couponCode = couponCode;
-    console.log(data);
-    makePostRequest(setLoading, "api/coupons", data, "Coupon", reset);
-  }
+
+  const onSubmit = async (data) => {
+    try {
+      setLoading(true);
+      const couponCode = generateCouponCode(data.title, data.expiryDate);
+      const formData = {
+        ...data,
+        couponCode: couponCode,
+      };
+      const response = await fetch("http://localhost:3002/api/coupons", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+      if (!response.ok) {
+        throw new Error("Failed to create coupon");
+      }
+      setLoading(false);
+      reset(); // Reset form after successful submission
+    } catch (error) {
+      console.error("Error creating coupon:", error);
+      setLoading(false);
+      // Handle error state if needed
+    }
+  };
+
   return (
     <div className="rounded-lg">
       <FormHeader className="rounded-lg" title="New Coupon" />

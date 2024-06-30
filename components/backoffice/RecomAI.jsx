@@ -1,13 +1,10 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { css } from "@emotion/react";
-import { BarLoader } from "react-spinners"; // Menggunakan BarLoader untuk contoh
+import { BarLoader } from "react-spinners";
 
 export default function RecomAI() {
-  const [aiResult, setAiResult] = useState(() => {
-    const savedResult = localStorage.getItem("aiResult");
-    return savedResult ? savedResult : "Loading...";
-  });
+  const [aiResult, setAiResult] = useState("Loading...");
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -16,8 +13,7 @@ export default function RecomAI() {
       try {
         const response = await fetch("http://localhost:3002/askAI");
         const data = await response.json();
-        setAiResult(data.msg);
-        localStorage.setItem("aiResult", data.msg);
+        setAiResult(data.aiResponse);
       } catch (error) {
         console.error("Error fetching AI result:", error);
         setAiResult("Failed to load AI result.");
@@ -26,18 +22,15 @@ export default function RecomAI() {
       }
     };
 
-    if (aiResult === "Loading...") {
-      fetchAiResult();
-    }
-  }, [aiResult]);
+    fetchAiResult();
+  }, []);
 
   const handleButtonClick = async () => {
     setLoading(true);
     try {
       const response = await fetch("http://localhost:3002/askAI");
       const data = await response.json();
-      setAiResult(data.msg);
-      localStorage.setItem("aiResult", data.msg);
+      setAiResult(data.aiResponse);
     } catch (error) {
       console.error("Error fetching AI result:", error);
       setAiResult("Failed to load AI result.");

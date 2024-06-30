@@ -1,16 +1,38 @@
-import { UploadDropzone } from "@/lib/uploadthing";
+import React from "react";
 import { Pencil } from "lucide-react";
 import Image from "next/image";
-import React from "react";
-
 
 export default function ImageInput({
   label,
   imageUrl = "",
   setImageUrl,
   className = "col-span-full",
-  endpoint = "",
-}) {
+})
+
+{
+const handleFileChange = async (event) => {
+  const file = event.target.files[0];
+  const formData = new FormData();
+  formData.append("image", file);
+
+  try {
+    const response = await fetch(`http://localhost:3002/upload-image`, {
+      method: "POST",
+      body: formData,
+    });
+    if (!response.ok) {
+      throw new Error("Failed to upload image");
+    }
+    const data = await response.json();
+    setImageUrl(data.url);
+    console.log("Image uploaded successfully:", data);
+  } catch (error) {
+    console.error("Error uploading image:", error);
+  }
+};
+
+
+
   return (
     <div className={className}>
       <div className="flex justify-between items-center mb-4 mt-5 rounded-lg">
@@ -24,7 +46,7 @@ export default function ImageInput({
           <button
             onClick={() => setImageUrl("")}
             type="button"
-            className="flex space-x-2  bg-slate-900 rounded-md shadow text-slate-50  py-2 px-4"
+            className="flex space-x-2 bg-slate-900 rounded-md shadow text-slate-50 py-2 px-4"
           >
             <Pencil className="w-5 h-5" />
             <span>Change Image</span>
@@ -40,20 +62,11 @@ export default function ImageInput({
           className="w-full h-64 object-contain"
         />
       ) : (
-        <UploadDropzone
-          endpoint={endpoint}
-          onClientUploadComplete={(res) => {
-            setImageUrl(res[0].url);
-            // Do something with the response
-            toast.success("Image Uploaded");
-            console.log("Files: ", res);
-            console.log("Upload Completed");
-          }}
-          onUploadError={(error) => {
-            toast.error("Image Upload Failed, Try Again");
-            // Do something with the error.
-            console.log(`ERROR! ${error.message}`,error);
-          }}
+        <input
+          type="file"
+          id="course-image"
+          accept="image/*"
+          onChange={handleFileChange}
         />
       )}
     </div>
