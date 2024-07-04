@@ -4,13 +4,24 @@ import React, { useState, useEffect } from "react";
 export default function CustomDataTable() {
   const PAGE_SIZE = 10;
   const [data, setData] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+  const [statusFilter, setStatusFilter] = useState("");
+  const [dateFilter, setDateFilter] = useState("");
 
   useEffect(() => {
     fetchData();
-  }, [currentPage]); // Fetch data when currentPage changes
+  }, []);
+
+  useEffect(() => {
+    applyFilters();
+  }, [data, statusFilter, dateFilter]);
+
+  useEffect(() => {
+    setTotalPages(Math.ceil(filteredData.length / PAGE_SIZE));
+  }, [filteredData]);
 
   const fetchData = async () => {
     setIsLoading(true);
@@ -31,13 +42,28 @@ export default function CustomDataTable() {
       }));
 
       setData(formattedResult);
-      const totalItems = formattedResult.length;
-      setTotalPages(Math.ceil(totalItems / PAGE_SIZE));
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const applyFilters = () => {
+    let filtered = data;
+
+    if (statusFilter) {
+      filtered = filtered.filter(
+        (item) => item.status.toLowerCase() === statusFilter.toLowerCase()
+      );
+    }
+
+    if (dateFilter) {
+      filtered = filtered.filter((item) => item.order_date === dateFilter);
+    }
+
+    setFilteredData(filtered);
+    setCurrentPage(1); // Reset to first page whenever filters change
   };
 
   // Function to format date from ISO 8601 to readable format
@@ -54,9 +80,12 @@ export default function CustomDataTable() {
   };
 
   const startIndex = (currentPage - 1) * PAGE_SIZE;
-  const currentDisplayedData = data.slice(startIndex, startIndex + PAGE_SIZE);
+  const currentDisplayedData = filteredData.slice(
+    startIndex,
+    startIndex + PAGE_SIZE
+  );
   const itemStartIndex = startIndex + 1;
-  const itemEndIndex = Math.min(startIndex + PAGE_SIZE, data.length);
+  const itemEndIndex = Math.min(startIndex + PAGE_SIZE, filteredData.length);
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
@@ -64,16 +93,43 @@ export default function CustomDataTable() {
 
   return (
     <div className="mt-8">
-      <h2 className="text-xl font-bold mb-4 ">Recent Orders</h2>
+      <h2 className="text-xl font-bold mb-4">Recent Orders</h2>
+
+      <div className="mb-4 text-slate-50">
+        <label className="mr-2">Filter by Status:</label>
+        <select
+          className="bg-slate-800 text-slate-50 rounded-lg"
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value)}
+        >
+          <option value="">All</option>
+          <option value="Pending">Process</option>
+          <option value="Completed">Completed</option>
+          <option value="Failed">Failed</option>
+          {/* Tambahkan opsi status lain yang Anda miliki */}
+        </select>
+
+        <label className="ml-4 mr-2">Filter by Order Date:</label>
+        <input
+        className="text-slate-50 bg-slate-800"
+          type="date"
+          value={dateFilter}
+          onChange={(e) => setDateFilter(e.target.value)}
+        />
+      </div>
+
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white dark:bg-gray-800">
-          <thead className="bg-gray-200 dark:bg-gray-700 ">
-            <tr clas>
+          <thead className="bg-gray-200 dark:bg-gray-700">
+            <tr>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Order ID
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 User Name
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Email
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Product Name
@@ -92,7 +148,7 @@ export default function CustomDataTable() {
           <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
             {isLoading ? (
               <tr>
-                <td colSpan="6" className="px-6 py-4 text-center">
+                <td colSpan="7" className="px-6 py-4 text-center">
                   Loading...
                 </td>
               </tr>
@@ -105,6 +161,7 @@ export default function CustomDataTable() {
                   <td className="px-6 py-4 whitespace-nowrap">
                     {item.username}
                   </td>
+                  <td className="px-6 py-4 whitespace-nowrap">{item.email}</td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     {item.product_name}
                   </td>
@@ -127,7 +184,7 @@ export default function CustomDataTable() {
           <span className="font-medium">
             {itemStartIndex}-{itemEndIndex}
           </span>{" "}
-          of <span className="font-medium">{data.length}</span> results
+          of <span className="font-medium">{filteredData.length}</span> results
         </p>
         <nav className="space-x-1" aria-label="Pagination">
           <button
