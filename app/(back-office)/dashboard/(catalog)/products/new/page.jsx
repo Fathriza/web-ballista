@@ -1,5 +1,6 @@
-"use client";
-import React, { useState } from "react";
+// frontend/pages/products/new.jsx
+"use client"
+import React, { useState, useEffect } from "react";
 import FormHeader from "@/components/backoffice/FormHeader";
 import Textinput from "@/components/Forminputs/Textinput";
 import SubmitButton from "@/components/Forminputs/SubmitButton";
@@ -10,12 +11,26 @@ import Selectinput from "@/components/Forminputs/Selectinput";
 
 export default function NewProduct() {
   const [imageUrl, setImageUrl] = useState("");
-  const categories = [
-    { id: 1, title: "Jersey" },
-    { id: 2, title: "Ticket" },
-    { id: 3, title: "Key Chain" },
-    { id: 4, title: "Shawl" },
-  ];
+  const [categories, setCategories] = useState([]);
+
+  // Fetch categories from API on component mount
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch("http://localhost:3002/api/categories");
+        if (!response.ok) {
+          throw new Error("Failed to fetch categories");
+        }
+        const data = await response.json();
+        setCategories(data); // Assuming data is an array of category objects
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
   const {
     register,
     handleSubmit,
@@ -23,40 +38,37 @@ export default function NewProduct() {
     formState: { errors },
   } = useForm();
 
-  
-const onSubmit = async (data) => {
-  const productData = {
-    product_name: data.product_name,
-    product_id: data.product_id,
-    price: data.price,
-    stock: data.stock,
-    description: data.description,
-    image_url: imageUrl, // Pastikan ini diatur dengan benar
-  };
+  const onSubmit = async (data) => {
+    const productData = {
+      product_name: data.product_name,
+      price: data.price,
+      stock: data.stock,
+      description: data.description,
+      image_url: imageUrl, // Pastikan ini diatur dengan benar
+      category_id: parseInt(data.category_id), // Mengonversi category_id menjadi integer jika perlu
+    };
 
-  try {
-    const response = await fetch("http://localhost:3002/api/products", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(productData),
-    });
+    try {
+      const response = await fetch("http://localhost:3002/api/products", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(productData),
+      });
 
-    if (!response.ok) {
-      throw new Error("Failed to create product");
+      if (!response.ok) {
+        throw new Error("Failed to create product");
+      }
+
+      reset();
+      setImageUrl("");
+      alert("Product created successfully!");
+    } catch (error) {
+      console.error("Error creating product:", error);
+      // Handle error state if needed
     }
-
-    reset();
-    setImageUrl("");
-    alert("Product created successfully!");
-  } catch (error) {
-    console.error("Error creating product:", error);
-    // Handle error state if needed
-  }
-};
-
-
+  };
 
   return (
     <div>
@@ -72,14 +84,7 @@ const onSubmit = async (data) => {
             register={register}
             errors={errors}
           />
-          <Textinput
-            label="Product ID"
-            name="product_id"
-            type="number"
-            register={register}
-            errors={errors}
-            className="w-full"
-          />
+
           <Textinput
             label="Product Price"
             name="price"
@@ -102,7 +107,7 @@ const onSubmit = async (data) => {
             register={register}
             errors={errors}
             className="w-full"
-            options={categories}
+            options={categories} // Menggunakan state categories untuk opsi dropdown
           />
           <ImageInput
             imageUrl={imageUrl}

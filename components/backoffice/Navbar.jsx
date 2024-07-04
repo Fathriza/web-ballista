@@ -8,7 +8,7 @@ import {
   User,
   X,
 } from "lucide-react";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import {
   DropdownMenu,
@@ -22,6 +22,26 @@ import Layout from "@/app/(back-office)/layout";
 import ThemeSwitcherBtn from "../ThemeSwitcher";
 
 export default function NavBar({ setShowSidebar, showSidebar }) {
+  const [lowStockProducts, setLowStockProducts] = useState([]);
+
+  useEffect(() => {
+    const fetchLowStockProducts = async () => {
+      try {
+        const response = await fetch(
+          "http://localhost:3002/api/low-stock-products"
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch low stock products");
+        }
+        const data = await response.json();
+        setLowStockProducts(data);
+      } catch (error) {
+        console.error("Error fetching low stock products:", error);
+      }
+    };
+    fetchLowStockProducts();
+  }, []);
+
   return (
     <div
       className="flex items-center justify-between bg-white dark:bg-slate-800
@@ -51,84 +71,42 @@ export default function NavBar({ setShowSidebar, showSidebar }) {
               <Bell className="text-green-600" />
               <span className="sr-only">Notifications</span>
               <div className="absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-red-500  rounded-full -top-0 -end-0 dark:border-gray-900">
-                20
+                {lowStockProducts.length}
               </div>
             </button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent className="py-2 px-4 pr-8">
+          <DropdownMenuContent className="py-2 px-4 pr-8 bg-slate-900">
             <DropdownMenuLabel>Notification</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <div className="flex items-center space-x-2">
-                <img
-                  src="/profile.jpg"
-                  alt="User Profile"
-                  width={200}
-                  height={200}
-                  className="w-8 h-8 rounded-full"
-                />
-                <div className="flex flex-col space-y-1">
-                  <p>Persib Jersey Blue Stock Out,</p>
-                  <div className="flex items-center space-x-2">
-                    <p className="px-3 py-0.5 bg-red-700 text-white rounded-full text-sm">
-                      Stock Out
-                    </p>
-                    <p>Mar 13 2024 - 13.00PM</p>
+            {lowStockProducts.length > 0 ? (
+              lowStockProducts.map((product) => (
+                <DropdownMenuItem key={product.product_id}>
+                  <div className="flex items-center space-x-2 ">
+                    <img
+                      src={product.image_url}
+                      alt={product.product_name}
+                      width={200}
+                      height={200}
+                      className="w-8 h-8 rounded-full"
+                    />
+                    <div className="flex flex-col space-y-1">
+                      <p>{product.product_name} Stock Low</p>
+                      <div className="flex items-center space-x-2">
+                        <p className="px-3 py-0.5 bg-red-700 text-white rounded-full text-sm">
+                          Stock: {product.stock}
+                        </p>
+                        <p>{new Date().toLocaleDateString()}</p>
+                      </div>
+                    </div>
+                    <button>
+                      <X />
+                    </button>
                   </div>
-                </div>
-                <button>
-                  <X />
-                </button>
-              </div>
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <div className="flex items-center space-x-2">
-                <img
-                  src="/profile.jpg"
-                  alt="User Profile"
-                  width={200}
-                  height={200}
-                  className="w-8 h-8 rounded-full"
-                />
-                <div className="flex flex-col space-y-1">
-                  <p>Persib Jersey Blue Stock Out,</p>
-                  <div className="flex items-center space-x-2">
-                    <p className="px-3 py-0.5 bg-red-700 text-white rounded-full text-sm">
-                      Stock Out
-                    </p>
-                    <p>Mar 13 2024 - 13.00PM</p>
-                  </div>
-                </div>
-                <button>
-                  <X />
-                </button>
-              </div>
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <div className="flex items-center space-x-2">
-                <img
-                  src="/profile.jpg"
-                  alt="User Profile"
-                  width={200}
-                  height={200}
-                  className="w-8 h-8 rounded-full"
-                />
-                <div className="flex flex-col space-y-1">
-                  <p>Persib Jersey Blue Stock Out,</p>
-                  <div className="flex items-center space-x-2">
-                    <p className="px-3 py-0.5 bg-red-700 text-white rounded-full text-sm">
-                      Stock Out
-                    </p>
-                    <p>Mar 13 2024 - 13.00PM</p>
-                  </div>
-                </div>
-                <button>
-                  <X />
-                </button>
-              </div>
-            </DropdownMenuItem>
+                </DropdownMenuItem>
+              ))
+            ) : (
+              <p>No low stock products</p>
+            )}
             <DropdownMenuSeparator />
           </DropdownMenuContent>
         </DropdownMenu>

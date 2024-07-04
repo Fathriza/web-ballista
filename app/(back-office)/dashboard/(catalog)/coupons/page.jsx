@@ -27,6 +27,14 @@ export default function Coupons() {
     fetchCoupons();
   }, []);
 
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are zero-based
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+  };
+
   return (
     <div>
       {/* Header */}
@@ -46,8 +54,7 @@ export default function Coupons() {
               <th className="border border-gray-600 px-4 py-2">ID</th>
               <th className="border border-gray-600 px-4 py-2">Name</th>
               <th className="border border-gray-600 px-4 py-2">Date</th>
-
-              {/* Add more headers as needed */}
+              
             </tr>
           </thead>
           <tbody>
@@ -60,10 +67,9 @@ export default function Coupons() {
                   {coupon.coup_title}
                 </td>
                 <td className="border border-gray-600 px-4 py-2">
-                  {coupon.coup_date}
+                  {formatDate(coupon.coup_date)}
                 </td>
-
-                {/* Render more fields as needed */}
+                
               </tr>
             ))}
           </tbody>
