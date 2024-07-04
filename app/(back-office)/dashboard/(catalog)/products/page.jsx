@@ -48,6 +48,7 @@ export default function Products() {
               <th className="border border-gray-600 px-4 py-2">Name</th>
               <th className="border border-gray-600 px-4 py-2">Description</th>
               <th className="border border-gray-600 px-4 py-2">Price</th>
+              <th className="border border-gray-600 px-4 py-2">Stock</th>
               <th className="border border-gray-600 px-4 py-2">Image</th>
               {/* Add more headers as needed */}
             </tr>
@@ -66,6 +67,9 @@ export default function Products() {
                 </td>
                 <td className="border border-gray-600 px-4 py-2">
                   {product.price}
+                </td>
+                <td className="border border-gray-600 px-4 py-2">
+                  {product.stock}
                 </td>
                 <td className="border border-gray-600 px-4 py-2">
                   <img

@@ -29,6 +29,7 @@ const onSubmit = async (data) => {
     product_name: data.product_name,
     product_id: data.product_id,
     price: data.price,
+    stock: data.stock,
     description: data.description,
     image_url: imageUrl, // Pastikan ini diatur dengan benar
   };
@@ -82,6 +83,14 @@ const onSubmit = async (data) => {
           <Textinput
             label="Product Price"
             name="price"
+            type="number"
+            register={register}
+            errors={errors}
+            className="w-full"
+          />
+          <Textinput
+            label="Product Stock"
+            name="stock"
             type="number"
             register={register}
             errors={errors}
