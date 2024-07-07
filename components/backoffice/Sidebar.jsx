@@ -12,6 +12,7 @@ import {
   LayoutList,
   LogOut,
   MonitorPlay,
+  PenIcon,
   PersonStanding,
   ScanSearch,
   SendToBack,
@@ -35,6 +36,11 @@ export default function Sidebar({ showSidebar, setShowSidebar }) {
       title: "Orders",
       icon: Truck,
       href: "/dashboard/orders",
+    },
+    {
+      title: "Design",
+      icon: PenIcon,
+      href: "/dashboard/generateProduct",
     },
   ];
   const catalogLinks = [

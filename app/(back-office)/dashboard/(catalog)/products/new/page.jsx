@@ -41,11 +41,11 @@ export default function NewProduct() {
   const onSubmit = async (data) => {
     const productData = {
       product_name: data.product_name,
-      price: data.price,
-      stock: data.stock,
+      price: parseFloat(data.price),
+      stock: parseInt(data.stock, 10),
       description: data.description,
       image_url: imageUrl, // Pastikan ini diatur dengan benar
-      category_id: parseInt(data.category_id), // Mengonversi category_id menjadi integer jika perlu
+      cat_id: parseInt(data.category_id, 10), // Mengonversi category_id menjadi integer jika perlu
     };
 
     try {
@@ -107,7 +107,10 @@ export default function NewProduct() {
             register={register}
             errors={errors}
             className="w-full"
-            options={categories} // Menggunakan state categories untuk opsi dropdown
+            options={categories.map(category => ({
+              value: category.cat_id,
+              label: category.title,
+            }))}
           />
           <ImageInput
             imageUrl={imageUrl}

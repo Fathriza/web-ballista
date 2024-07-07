@@ -1,36 +1,26 @@
 import React from "react";
 
-export default function Selectinput({
-  label,
-  name,
-  register,
-  className = "sm:col-span-2",
-  options = [],
-}) {
+const Selectinput = ({ label, name, register, errors, options, className}) => {
   return (
-    <div className={className}>
-      <label
-        htmlFor={name}
-        className="block text-sm font-medium leading-6 text-slate-50"
+    <div className={`mb-4 ${className}`}>
+      <label className="block text-sm font-medium text-white-700">{label}</label>
+      <select
+        name={name}
+        {...register(name)}
+        className="mt-1 block ww-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-black"
       >
-        {label}
-      </label>
-      <div className="mt-2">
-        <select
-          {...register(`${name}`)}
-          id={name}
-          name={name}
-          className="block w-full rounded-md border-0 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
-        >
-          {options.map((option, i) => {
-            return (
-              <option key={i} value={option.id}>
-                {option.title}
-              </option>
-            );
-          })}
-        </select>
-      </div>
+        <option value="">Select {label}</option>
+        {options.map((option) => (
+          <option key={option.value} value={option.value}>
+            {option.label}
+          </option>
+        ))}
+      </select>
+      {errors[name] && (
+        <span className="text-red-500 text-xs">{errors[name].message}</span>
+      )}  
     </div>
   );
-}
+};
+
+export default Selectinput;

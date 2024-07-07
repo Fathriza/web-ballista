@@ -75,12 +75,8 @@ export default function WeeklySalesChart() {
         2,
         "0"
       )}`;
-      const nextMonthName = new Date(nextMonth + "-01").toLocaleString(
-        "default",
-        {
-          month: "long",
-        }
-      );
+      const nextMonthName =
+        monthNames[String(nextMonthNumber).padStart(2, "0")];
 
       if (!labels.includes(nextMonthName)) {
         labels.push(nextMonthName);
