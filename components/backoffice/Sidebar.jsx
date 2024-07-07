@@ -11,6 +11,7 @@ import {
   LayoutGrid,
   LayoutList,
   LogOut,
+  Map,
   MonitorPlay,
   PenIcon,
   PersonStanding,
@@ -36,6 +37,11 @@ export default function Sidebar({ showSidebar, setShowSidebar }) {
       title: "Orders",
       icon: Truck,
       href: "/dashboard/orders",
+    },
+    {
+      title: "Performance",
+      icon: Truck,
+      href: "/dashboard/productPerformance",
     },
     {
       title: "Design",
