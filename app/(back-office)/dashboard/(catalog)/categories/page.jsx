@@ -47,13 +47,13 @@ export default function UpdateCategory() {
           <tbody>
             {categories.map((category) => (
               <tr key={category.id}>
-                <td className="border border-gray-600 px-4 py-2">
+                <td className="border border-gray-600 px-4 py-2 text-slate-900 dark:text-slate-50">
                   {category.title}
                 </td>
-                <td className="border border-gray-600 px-4 py-2">
+                <td className="border border-gray-600 px-4 py-2 text-slate-900 dark:text-slate-50">
                   {category.description}
                 </td>
-                <td className="border border-gray-600 px-4 py-2">
+                <td className="border border-gray-600 px-4 py-2 text-slate-900 dark:text-slate-50">
                   <img
                     src={category.imageUrl}
                     alt={category.title}

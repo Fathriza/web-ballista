@@ -93,12 +93,14 @@ export default function CustomDataTable() {
 
   return (
     <div className="mt-8">
-      <h2 className="text-xl font-bold mb-4">Recent Orders</h2>
+      <h2 className="text-xl font-bold mb-4 text-slate-900 dark:text-slate-50">
+        Recent Orders
+      </h2>
 
-      <div className="mb-4 text-slate-50">
+      <div className="mb-4 text-slate-900 dark:text-slate-50">
         <label className="mr-2">Filter by Status:</label>
         <select
-          className="bg-slate-800 text-slate-50 rounded-lg"
+          className="dark:bg-slate-50  text-slate-900 dark:text-slate-900 rounded-lg"
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
         >
@@ -109,9 +111,11 @@ export default function CustomDataTable() {
           {/* Tambahkan opsi status lain yang Anda miliki */}
         </select>
 
-        <label className="ml-4 mr-2">Filter by Order Date:</label>
+        <label className="ml-4 mr-2 text-slate-900 dark:text-slate-50">
+          Filter by Order Date:
+        </label>
         <input
-        className="text-slate-50 bg-slate-800"
+          className=" rounded-lg dark:bg-slate-50  text-slate-900 dark:text-slate-900"
           type="date"
           value={dateFilter}
           onChange={(e) => setDateFilter(e.target.value)}
@@ -155,21 +159,25 @@ export default function CustomDataTable() {
             ) : (
               currentDisplayedData.map((item) => (
                 <tr key={item.order_id}>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-6 py-4 whitespace-nowrap text-slate-900 dark:text-slate-50">
                     {item.order_id}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-6 py-4 whitespace-nowrap text-slate-900 dark:text-slate-50">
                     {item.username}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">{item.email}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-6 py-4 whitespace-nowrap text-slate-900 dark:text-slate-50">
+                    {item.email}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-slate-900 dark:text-slate-50">
                     {item.product_name}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-6 py-4 whitespace-nowrap text-slate-900 dark:text-slate-50">
                     {item.quantity}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">{item.status}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-6 py-4 whitespace-nowrap text-slate-900 dark:text-slate-50">
+                    {item.status}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-slate-900 dark:text-slate-50">
                     {formatDate(item.order_time)}
                   </td>
                 </tr>

@@ -56,22 +56,22 @@ export default function Products() {
           <tbody>
             {products.map((product) => (
               <tr key={product.product_id}>
-                <td className="border border-gray-600 px-4 py-2">
+                <td className="border border-gray-600 px-4 py-2 text-slate-900 dark:text-slate-50">
                   {product.product_id}
                 </td>
-                <td className="border border-gray-600 px-4 py-2">
+                <td className="border border-gray-600 px-4 py-2 text-slate-900 dark:text-slate-50">
                   {product.product_name}
                 </td>
-                <td className="border border-gray-600 px-4 py-2">
+                <td className="border border-gray-600 px-4 py-2 text-slate-900 dark:text-slate-50">
                   {product.description}
                 </td>
-                <td className="border border-gray-600 px-4 py-2">
+                <td className="border border-gray-600 px-4 py-2 text-slate-900 dark:text-slate-50">
                   {product.price}
                 </td>
-                <td className="border border-gray-600 px-4 py-2">
+                <td className="border border-gray-600 px-4 py-2 text-slate-900 dark:text-slate-50">
                   {product.stock}
                 </td>
-                <td className="border border-gray-600 px-4 py-2">
+                <td className="border border-gray-600 px-4 py-2 text-slate-900 dark:text-slate-50">
                   <img
                     src={product.image_url}
                     alt={product.product_name}

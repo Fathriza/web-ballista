@@ -138,7 +138,7 @@ export default function WeeklySalesChart() {
         Monthly Sales, Orders, and KPI Recommendation Chart
       </h2>
       <div className="p-4">
-        <Line options={options} data={data} />
+        <Line options={options} data={data}  />
       </div>
     </div>
   );
